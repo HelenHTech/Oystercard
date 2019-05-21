@@ -1,9 +1,11 @@
 require 'oystercard'
+require 'journey'
+
 describe Oystercard do
   let (:entry_station_dbl) {double("Entry_station")}
   let (:exit_station_dbl) {double("Exit_station")}
   let(:minimum) {Oystercard::MINIMUM_BALANCE}
-  subject { Oystercard.new }
+
   it '#balance == 0' do
     expect(subject.balance).to eq(0)
   end
@@ -20,11 +22,11 @@ describe Oystercard do
   context '#balance=3000' do
     before {subject.top_up(3000)}
     it '#touch_out' do
-      set_card_use_state(true)
+      subject.touch_in(entry_station_dbl)
       expect{subject.touch_out(exit_station_dbl)}.to change{subject.balance}.by(-minimum)
     end
     it 'touch_out' do
-      subject.instance_variable_set(:@entry_station, 'Baker Street')
+      subject.touch_in(entry_station_dbl)
       subject.touch_out(exit_station_dbl)
       expect(subject.entry_station).to eq(nil)
     end
@@ -32,17 +34,16 @@ describe Oystercard do
       subject.touch_in(entry_station_dbl)
       expect(subject.in_journey?).to eq(true)
     end
-    it '#touch_in(entry_station)' do
-      subject.touch_in(entry_station_dbl)
-      expect(subject.entry_station).to eq(entry_station_dbl)
-    end
   end
 
   it '#in_journey?' do
-    expect(subject.in_journey?).to eq(false)
+    subject.top_up(minimum)
+    subject.touch_in(entry_station_dbl)
+    expect(subject.in_journey?).to eq(true)
   end
   it '#touch_out' do
-    set_card_use_state(true)
+    subject.top_up(minimum)
+    subject.touch_in(entry_station_dbl)
     subject.touch_out(exit_station_dbl)
     expect(subject.in_journey?).to eq(false)
   end
@@ -60,7 +61,4 @@ describe Oystercard do
     expect(subject.list_of_journeys).to eq([{:entry => entry_station_dbl, :exit => exit_station_dbl}])
   end
 
-  def set_card_use_state(state)
-    subject.instance_variable_set(:@in_use, state)
-  end
 end
