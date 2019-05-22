@@ -3,6 +3,7 @@ class Journey
   MINIMUM_FARE = 100
   PENALTY = 600
   attr_reader :entry_station, :exit_station
+  attr_accessor :entry_station, :exit_station
 
   def start(station)
     @entry_station = station

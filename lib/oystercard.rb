@@ -1,6 +1,7 @@
 # A card to store funds and pay for travel
 class Oystercard
   attr_reader :balance, :journey_list
+  attr_accessor :oystercard
   MAX_BALANCE = 9000
   MIN_BALANCE = Journey::MINIMUM_FARE
   MAX_ERROR = "Cannot top-up beyond £#{MAX_BALANCE / 100}".freeze
