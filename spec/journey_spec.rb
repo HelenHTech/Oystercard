@@ -2,40 +2,40 @@ require 'journey'
 require 'oystercard'
 
 describe Journey do
-let (:station_dbl) {double("Station")}
+  let(:station) { double('Station') }
 
-  it 'starting a journey' do
-    expect(subject.start(station_dbl)).to eq(station_dbl)
-  end
-  it '#touch_in(entry_station)' do
-    subject.start(station_dbl)
-    expect(subject.entry_station).to eq(station_dbl)
-  end
-  it 'finishing a journey' do
-    expect(subject.finish(station_dbl)).to eq(station_dbl)
-  end
-
-  context 'Encurring penalty charge' do
-    it '#fare - No exit station' do
-      subject.start(station_dbl)
-      expect(subject.fare).to eq(Journey::PENALTY)
+  context 'A journey has started' do
+    before { subject.start(station) }
+    it 'should store its start station' do
+      expect(subject.entry_station).to eq(station)
     end
-    it '#fare - No entry station' do
-      subject.finish(station_dbl)
-      expect(subject.fare).to eq(Journey::PENALTY)
+    it 'should store its finish station' do
+      subject.finish(station)
+      expect(subject.exit_station).to eq(station)
     end
   end
 
-  context 'Completed journeys' do
-    before { subject.start(station_dbl)
-      subject.finish(station_dbl)
-    }
-    it 'Is the journey complete' do
+  context 'A journey has not been properly started/finished' do
+    it 'should charge a penalty if no exit station is given' do
+      subject.start(station)
+      expect(subject.fare).to eq(Journey::PENALTY)
+    end
+    it 'should charge a penalty if no start startion is given' do
+      subject.finish(station)
+      expect(subject.fare).to eq(Journey::PENALTY)
+    end
+  end
+
+  context 'A journey has been completed' do
+    before do
+      subject.start(station)
+      subject.finish(station)
+    end
+    it 'should shoew the journey as complete' do
       expect(subject.completed).to eq(true)
     end
-    it '#fare - Fare of £1' do
+    it 'should charge the minimum fare' do
       expect(subject.fare).to eq(Journey::MINIMUM_FARE)
     end
   end
-
 end

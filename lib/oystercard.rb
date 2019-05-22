@@ -1,6 +1,6 @@
 # A card to store funds and pay for travel
 class Oystercard
-  attr_reader :balance, :entry_station, :journey_list, :exit_station
+  attr_reader :balance, :journey_list
   MAX_BALANCE = 9000
   MIN_BALANCE = Journey::MINIMUM_FARE
   MAX_ERROR = "Maximum limit (of £#{MAX_BALANCE / 100}) reached".freeze
@@ -18,7 +18,7 @@ class Oystercard
   end
 
   def in_journey?
-    !@current_journey.completed
+    !@current_journey.nil?
   end
 
   def touch_in(station)
@@ -29,9 +29,9 @@ class Oystercard
   end
 
   def touch_out(exit_station)
-    deduct(MIN_BALANCE)
     @current_journey.finish(exit_station)
     @journey_list.push(@current_journey.journey_hash)
+    charge
   end
 
   def min_balance_met?
@@ -40,7 +40,8 @@ class Oystercard
 
   private
 
-  def deduct(amount)
-    @balance -= amount
+  def charge
+    @balance -= @current_journey.fare
+    @current_journey = nil
   end
 end

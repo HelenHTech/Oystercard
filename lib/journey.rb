@@ -1,3 +1,4 @@
+# Stores all journey details
 class Journey
   MINIMUM_FARE = 100
   PENALTY = 600
@@ -12,7 +13,7 @@ class Journey
   end
 
   def completed
-    @entry_station != nil && @exit_station != nil
+    !@entry_station.nil? && !@exit_station.nil?
   end
 
   def fare
@@ -20,7 +21,6 @@ class Journey
   end
 
   def journey_hash
-    {:entry => @entry_station, :exit => @exit_station}
+    { entry: @entry_station, exit: @exit_station }
   end
-
 end
