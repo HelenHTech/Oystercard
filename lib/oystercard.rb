@@ -3,7 +3,7 @@ class Oystercard
   attr_reader :balance, :journey_list
   MAX_BALANCE = 9000
   MIN_BALANCE = Journey::MINIMUM_FARE
-  MAX_ERROR = "Maximum limit (of £#{MAX_BALANCE / 100}) reached".freeze
+  MAX_ERROR = "Cannot top-up beyond (of £#{MAX_BALANCE / 100})".freeze
   MIN_ERROR = "Minimum fare of £#{MIN_BALANCE / 100} is required to touch in".freeze
   def initialize(balance = 0)
     @balance = balance
