@@ -1,16 +1,14 @@
-# Stores all journey details
 class Journey
-  MINIMUM_FARE = 100
-  PENALTY = 600
+  MINIMUM_FARE = 1
+  PENALTY = 6
   attr_reader :entry_station, :exit_station
-  attr_accessor :entry_station, :exit_station
 
-  def start(station)
-    @entry_station = station
+  def set_the_entry(entry_station)
+    @entry_station = entry_station
   end
 
-  def finish(station)
-    @exit_station = station
+  def set_the_exit(exit_station)
+    @exit_station = exit_station
   end
 
   def completed
@@ -18,10 +16,11 @@ class Journey
   end
 
   def fare
-    completed == true ? MINIMUM_FARE : PENALTY
+    completed == true ? MINIMUM_FARE + (@entry_station.zone - @exit_station.zone).abs : PENALTY
   end
 
   def journey_hash
     { entry: @entry_station, exit: @exit_station }
   end
+
 end

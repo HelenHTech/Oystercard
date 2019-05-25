@@ -1,26 +1,22 @@
 require 'journey_log'
-require 'journey'
+describe JourneyLog do
 
-describe Journeylog do
-  let(:station) { double(:station) }
-  let(:journeylog) { Journeylog.new }
+  let(:station){ double :station }
+  let(:journeylog)     { JourneyLog.new }
 
-context 'Logging a journey' do
-  it 'Starting a journey - Entry station' do
-    journeylog.start_journey(station)
-    start_journey = journeylog.journeys[0]
-    expect(start_journey.entry_station).to eq(station)
+  it { should respond_to(:start).with(1).argument }
+
+  describe '#start' do
+    it 'starts a journey' do
+      journeylog.start(station)
+      journey = journeylog.journeys[0]
+      expect(journey.entry_station).to eq(station)
+    end
+
+    it 'records a journey' do
+      journeylog.start(station)
+      journey = journeylog.journeys[0]
+      expect(journey.entry_station).to eq(station)
+    end
   end
-  it 'Finishing a journey - Exit station' do
-    journeylog.finish_journey(station)
-    finish_journey = journeylog.journeys[0]
-    expect(finish_journey.exit_station).to eq(station)
-  end
-end
-
-  # it 'Current_journey method to return only incomplete journey' do
-  #   journeylog.start(station)
-  #   expect(journeylog.current_journey).to eq(journeylog.journeys[0])
-  # end
-
 end

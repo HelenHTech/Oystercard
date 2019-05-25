@@ -1,26 +1,26 @@
 require 'journey'
 
-class Journeylog
+class JourneyLog
   attr_reader :journeys
   def initialize(journey = Journey.new)
     @journeys = [journey]
   end
 
-  def start_journey(station)
-    @journeys[0].start(station)
+  def start(station)
+    @journeys.last.set_the_entry(station)
   end
 
-  def finish_journey(station)
-    @journeys[0].finish(station)
+  def fare
+    @journeys.last.fare
+  end
+
+  def finish(station)
+    @journeys.last.set_the_exit(station)
   end
 
   private
   def current_journey
-    if @journeys[0].complete?
-      @journeys.push(journey)
-    else
-      return @journeys
-    end
+    @journeys.last.completed ? @journeys.push(journey) : @journeys[0]
   end
 
 end
